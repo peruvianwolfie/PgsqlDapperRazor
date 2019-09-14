@@ -1,0 +1,88 @@
+﻿@page
+@model PgsqlDapperRazor.Pages.EmpleadosModel
+@{
+    ViewData["Title"] = "Listado de registros";
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Empleados</title>
+</head>
+<body>
+    <div class="text-center">
+        <h3 class="display-5">Tabla de empleados</h3>
+
+        <table class="table" id="tablaEmpleados">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+
+                </tr>
+            </thead>
+        </table>
+
+    </div>
+    <p id="detalles"> <h4>Detalles</h4></p>
+    <table class="table" id="detalleEmpleado" width="400">
+        <thead class="thead-light">
+            <tr>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th>Oficina</th>
+                <th>Especialidad</th>
+                <th>Salario</th>
+            </tr>
+        </thead>
+    </table>
+
+    @section scripts {
+        <script>
+    var registros; //variable global a la cual se le asigna la respuesta de la consulta ajax.
+    $.ajax({
+        type: "GET",
+        url: 'api/ListaEmpleados',
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+            registros = response;
+            // Looping over emloyee list and display it
+            $.each(response, function (index, emp) {
+                $('#tablaEmpleados').append('<tr><td>' +
+                    emp.id + "</td><td>" +
+                    emp.name + "</td></tr>");
+            });
+            $('#detalleEmpleado').append('<tr id="row1"><td>' +
+                registros[0].name + "</td><td>" +
+                registros[0].address + "</td><td>" +
+                registros[0].office + "</td><td>" +
+                registros[0].field + "</td><td>" +
+                registros[0].salary + "</td></tr>");
+        },
+        failure: function (jqXHR, textStatus, errorThrown) {
+            alert("HTTP Status: " + jqXHR.status + "; Error Text: " + jqXHR.responseText); // Mensaje de error
+        }
+    });
+
+    $("#tablaEmpleados").on('click', 'tr', function () {
+        var idEmpleado = $(this).find("td").eq(0).html();
+        var reg = registros.filter(registro => registro.id == idEmpleado); //registros es una variable global a la cual se le asigna la respuesta de la consulta ajax.
+
+        $('#row1').remove();
+
+        $('#detalleEmpleado').append('<tr id="row1"><td>' +
+            reg[0].name + "</td><td>" +
+            reg[0].address + "</td><td>" +
+            reg[0].office + "</td><td>" +
+            reg[0].field + "</td><td>" +
+            reg[0].salary + "</td></tr>");
+    });
+
+        </script>
+
+    }
+</body>
+</html>
