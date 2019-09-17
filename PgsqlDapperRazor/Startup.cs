@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +20,7 @@ namespace PgsqlDapperRazor
         {
             services.AddTransient<IEmpleado, EmpleadoServicio>();
             services.AddTransient<ICliente, ClienteServicio>();
+            services.AddTransient<IProducto, ProductoServicio>();
             services.AddMvc();
         }
 
